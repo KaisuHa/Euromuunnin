@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Alert } from 'react-native';
 import { useState } from 'react';
 import {Picker, useRef} from '@react-native-picker/picker';
 
@@ -9,36 +9,35 @@ export default function App() {
   const [rahamaara, setRahamaara] = useState();
   const [selectedValue, setSelectedValue] = useState();
   const [result, setResult] = useState('');
-  const [currency, setCurrency] = useState([]);
+  const [currency, setCurrency] = useState();
+  const [euro, getEuro]= useState();
 
-  const data = [];
-  console.log(Object.keys(data));
+ // const data = [];
+  //console.log(Object.keys(data));
 
-  var myHeaders = new Headers();
-myHeaders.append("apikey", "nlj3caeCrb6EWQwSiMzPKHEzbrEF3kfk");
+var myHeaders = new Headers();
+  myHeaders.append("apikey", "nlj3caeCrb6EWQwSiMzPKHEzbrEF3kfk");
 
 var requestOptions = {
   method: 'GET',
   redirect: 'follow',
   headers: myHeaders
 };
-
-fetch("https://api.apilayer.com/exchangerates_data/convert?to={EUR}&from={from}&amount={amount}", requestOptions)
+ 
+fetch("https://api.apilayer.com/exchangerates_data/latest", requestOptions)
   .then(response => response.json())
-  .then(result => console.log(result)
-  .catch(error => console.log('error', error)));
+  .then(data => setCurrency(data))
+  .catch(error =>{ Alert.alert('Error', error);
+ });
+ 
+  //const getEuro = () =>{
+   
+  //}
+  const valuutta = {
+    rates:'',
+  };
 
-  //const pickerRef = useRef();
-
-  //function open() {
- //   pickerRef.current.focus();
- // }
-  
- // function close() {
- //   pickerRef.current.blur();
- // }
-
-
+  console.log(Object.keys(valuutta));
 
   return (
     <View style={styles.container}>
@@ -57,7 +56,7 @@ fetch("https://api.apilayer.com/exchangerates_data/convert?to={EUR}&from={from}&
         <Picker.Item label="Valuutta" value="valuutta" />
       </Picker>
       
-      <Button title="CONVERT"  />
+      <Button title="CONVERT" onPress= {getEuro} />
     </View>
   );
 }
